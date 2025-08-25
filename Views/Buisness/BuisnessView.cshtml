@@ -1,0 +1,172 @@
+﻿@model List<BugalDaily.Models.TechArticleModel>
+
+@{
+    ViewData["Title"] = "Buisness News";
+}
+<script>
+    const menuIcon = document.getElementById("menuIcon");
+    if (menuIcon) {
+        menuIcon.addEventListener("click", () => {
+            menuIcon.classList.toggle("open");
+        });
+    }
+</script>
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Buisness News</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var article in Model)
+        {
+            <div class="card mb-3 shadow-sm title-card-border">
+                <div class="row g-0">
+                    @if (!string.IsNullOrEmpty(article.UrlToImage))
+                    {
+                        <div class="col-md-4">
+                            <img src="@article.UrlToImage" class="img-fluid rounded-start" alt="News Image" style="object-fit: cover; height: 100%;">
+                        </div>
+                    }
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <p class="card-text text-muted">
+                                    <small>@article.SourceName | @(article.PublishedAt?.ToString("g") ?? "Unknown")</small>
+                                </p>
+
+                            </h5>
+                            <a href="@Url.Action("Details", "Buisness", new { url = article.Url })" class="text-decoration-none">
+                                @article.Title
+                            </a>
+                            <p class="card-text">@article.Description</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No articles found. Please try again later.</p>
+    }
+</div>
+
+<button type="button" class="comment-button" data-bs-toggle="modal" data-bs-target="#messageModal">
+    Comments
+</button>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content frosted-glass">
+            <div class="">
+                <!-- Message list will render here -->
+                <ul id="messageList" class="list-group"></ul>
+
+                <!-- Input area -->
+                <div class="input-group mt-3">
+                    <input type="text" id="messageInput" class="form-control col-sm-8 " placeholder="Post your comment here">
+                    <button id="sendMessage" class="btn btn-primary col-sm-2 ms-2">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const messageKey = 'modalMessages';
+
+    // ✅ New: Format relative time like Twitter
+    function formatRelativeTime(timestamp) {
+        const now = new Date();
+        const msgDate = new Date(timestamp);
+        const diff = (now - msgDate) / 1000; // difference in seconds
+
+        if (diff < 60) return 'Just now';
+        if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+
+        const yesterday = new Date();
+        yesterday.setDate(now.getDate() - 1);
+        if (
+            msgDate.getDate() === yesterday.getDate() &&
+            msgDate.getMonth() === yesterday.getMonth() &&
+            msgDate.getFullYear() === yesterday.getFullYear()
+        ) return 'Yesterday';
+
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        if (diff < 7 * 86400) return daysOfWeek[msgDate.getDay()];
+
+        // Else show full date
+        return msgDate.toLocaleDateString();
+    }
+
+    // ✅ Updated to use relative time
+            function renderMessage({ sender, timestamp, text }) {
+        if (!sender || !timestamp || !text) return; // ✅ Prevent rendering undefined
+
+        const messageList = document.getElementById('messageList');
+        const relativeTime = formatRelativeTime(timestamp);
+
+        // Create wrapper div for sender and timestamp
+        const headerDiv = document.createElement('div');
+        headerDiv.innerHTML = `
+            <span class="message-sender ms-3 mb-3">${sender}</span>
+            <span class="message-timestamp ms-2 mb-2">${relativeTime}</span>
+        `;
+
+        // Create the message item
+        const li = document.createElement('li');
+        li.className = 'list-group-item col-sm-4 message-item mb-3';
+        li.innerHTML = `<div class="message-text ms-3">${text}</div>`;
+
+        // Append both to message list
+        messageList.appendChild(headerDiv);
+        messageList.appendChild(li);
+    }
+
+
+
+    function loadMessages() {
+        const stored = localStorage.getItem(messageKey);
+        const messages = stored ? JSON.parse(stored) : [];
+        const list = document.getElementById('messageList');
+        list.innerHTML = '';
+        messages.forEach(renderMessage);
+    }
+
+    function addMessage(sender, text) {
+        const timestamp = new Date().toISOString(); // ✅ Store timestamp in ISO format
+        const stored = localStorage.getItem(messageKey);
+        const messages = stored ? JSON.parse(stored) : [];
+        const msgObj = { sender, timestamp, text };
+        messages.push(msgObj);
+        localStorage.setItem(messageKey, JSON.stringify(messages));
+        renderMessage(msgObj);
+    }
+
+    document.getElementById('sendMessage').addEventListener('click', () => {
+        const input = document.getElementById('messageInput');
+        const msg = input.value.trim();
+        if (msg) {
+            addMessage('You', msg);
+            input.value = '';
+        }
+    });
+
+    // Load messages when modal opens
+    const modal = document.getElementById('messageModal');
+    modal.addEventListener('show.bs.modal', loadMessages);
+
+    // Sync across tabs
+    window.addEventListener('storage', function (e) {
+        if (e.key === messageKey) loadMessages();
+    });
+</script>
+
+
+
+
+

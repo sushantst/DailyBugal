@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Report New Article";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Report New Article</h2>
+
+    <form id="articleForm" method="post" enctype="multipart/form-data">
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-10">
+                <input type="text" name="Title" class="form-control" placeholder="Enter article title" required />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Author</label>
+            <div class="col-sm-10">
+                <input type="text" name="Author" class="form-control" placeholder="Enter author name" required />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Location</label>
+            <div class="col-sm-10">
+                <input type="text" name="Location" class="form-control" placeholder="Enter location" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Country</label>
+            <div class="col-sm-10">
+                <select name="Country" class="form-select" required>
+                    <option value="">-- Select Country --</option>
+                    <option>United States</option>
+                    <option>India</option>
+                    <option>United Kingdom</option>
+                    <option>Canada</option>
+                    <option>Australia</option>
+                    <option>Germany</option>
+                    <option>France</option>
+                    <option>Italy</option>
+                    <option>Spain</option>
+                    <option>Brazil</option>
+                    <option>Mexico</option>
+                    <option>Russia</option>
+                    <option>Japan</option>
+                    <option>China</option>
+                    <option>South Korea</option>
+                    <option>South Africa</option>
+                    <option>Saudi Arabia</option>
+                    <option>Turkey</option>
+                    <option>Indonesia</option>
+                    <option>Argentina</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Article</label>
+            <div class="col-sm-10">
+                <textarea name="Article" rows="5" class="form-control" placeholder="Write your article here..." required></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Image</label>
+            <div class="col-sm-10">
+                <input type="file" name="ArticleImage" class="form-control" accept="image/*" />
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-4">Submit</button>
+        </div>
+    </form>
+</div>
+<script>
+    document.getElementById("articleForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        const response = await fetch("/api/ReportingApi/ReportNewArticle", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            const text = await response.text(); // get raw error text
+            alert("Error: " + text);
+            return;
+        }
+
+        const result = await response.json();
+        alert(result.message);
+    });
+</script>

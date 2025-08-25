@@ -1,0 +1,293 @@
+﻿@model BugalDaily.Models.MultipleNewsSourceModel
+@{
+    ViewData["Title"] = "BugalDaily News";
+}
+
+<div class="text-center">
+   
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Reporter"))
+    {
+        <a asp-controller="Reporting" asp-action="ReportNewArticle" class="btn custom-sec-btn">
+            <img src="img/reporter.png" alt="Business Icon" class="btn-icon" style="background:#ddd;" />
+            Reporter
+        </a>
+    }
+
+    <a href="/Politics" class="btn frosted-glass-btn">
+        <img src="img/politics.svg" alt="Politics Icon" class="btn-icon" />
+        Politics & Policy
+    </a>
+
+    <a href="Buisness" class="btn custom-sec-btn">
+        <img src="img/buisnes.svg" alt="Business Icon" class="btn-icon" />
+        Business
+    </a>
+    
+    <a href="/Technology" class="btn frosted-glass-btn">
+        <img src="img/science.svg" alt="Tech Icon" class="btn-icon" />
+        Technology
+    </a>
+
+    <a href="/Health" class="btn custom-sec-btn">
+        <img src="img/health.svg" alt="Business Icon" class="btn-icon" />
+        Health
+    </a>
+
+    <a href="/Technology/Sports" class="btn frosted-glass-btn">
+        <img src="img/sports.svg" alt="Sports Icon" class="btn-icon" />
+        Sports
+    </a>
+
+    <a href="/Technology/Astrology" class="btn custom-sec-btn">
+        <img src="img/hs.svg" alt="Business Icon" class="btn-icon" style="background:#ddd;" />
+        Astrology
+    </a>
+
+</div>
+@if ((Model.articles != null && Model.articles.Any())
+    || (Model.general != null && Model.general.Any())
+    || (Model.sports != null && Model.sports.Any())
+    || (Model.buisness != null && Model.buisness.Any())
+    || (Model.education != null && Model.education.Any()))
+{
+    
+    var counts = new List<int>();
+
+    if (Model.articles != null && Model.articles.Any())
+        counts.Add(Model.articles.Count);
+    if (Model.general != null && Model.general.Any())
+        counts.Add(Model.general.Count);
+    if (Model.sports != null && Model.sports.Any())
+        counts.Add(Model.sports.Count);
+    if (Model.buisness != null && Model.buisness.Any())
+        counts.Add(Model.buisness.Count);
+    if (Model.education != null && Model.education.Any())
+        counts.Add(Model.education.Count);
+
+    var minCount = counts.Any() ? counts.Min() : 0;
+
+    for (int i = 0; i < minCount; i++)
+    {
+        var article = (Model.articles != null && Model.articles.Count > i) ? Model.articles[i] : null;
+        var general = (Model.general != null && Model.general.Count > i) ? Model.general[i] : null;
+        var sports = (Model.sports != null && Model.sports.Count > i) ? Model.sports[i] : null;
+        var buisness = (Model.buisness != null && Model.buisness.Count > i) ? Model.buisness[i] : null;
+        var education = (Model.education != null && Model.education.Count > i) ? Model.education[i] : null;
+
+        <div class="container-fluid d-flex flex-column mb-2 mt-4" style="min-height: calc(100vh - 170px);">
+            <div class="flex-grow-1 d-flex mb-2">
+                <!-- Left column -->
+                <div class="col-md-7 d-flex frosted-glass" style="border-radius: 10px;">
+                    <div class="p-3 flex-fill">
+                        <div class="col">
+                            @if (article != null)
+                            {
+                                <div class="col-md-12 mb-lg-3">
+                                    <a href="@Url.Action("Details", "Health", new { url = article.Url })" class="text-decoration-none">
+                                        @article.Title
+                                    </a>
+                                </div>
+                                <div class="col-md-12 mb-lg-3">
+                                    <h5 class="card-title">
+                                        <p class="card-text text-muted">
+                                            <small>@article.SourceName | @(article.PublishedAt?.ToString("g") ?? "Unknown")</small>
+                                        </p>
+                                    </h5>
+                                </div>
+                                <div class="col-md-12 mt-lg-3">
+                                    @if (!string.IsNullOrEmpty(article.UrlToImage))
+                                    {
+                                        <img src="@article.UrlToImage"
+                                             class="img-fluid rounded-start w-100"
+                                             alt="News Image"
+                                             style="max-height: 500px; object-fit: cover; display: block; border-radius:8px" />
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="col-md-4 ms-4 d-flex flex-column index-right justify-content-between">
+                    @if (general != null)
+                    {
+                        <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                            <div class="row flex-grow-1">
+                                <div class="col-md-4 mt-4">
+                                    @if (!string.IsNullOrEmpty(general.UrlToImage))
+                                    {
+                                        <img src="@general.UrlToImage"
+                                             class="img-fluid rounded-start w-100 h-75"
+                                             alt="General News Image"
+                                             style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+                                    }
+                                </div>
+                                <div class="col-md-7 ms-2 mt-4">@general.Title</div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (sports != null)
+                    {
+                        <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                            <div class="row flex-grow-1">
+                                <div class="col-md-4 mt-4">
+                                    @if (!string.IsNullOrEmpty(sports.UrlToImage))
+                                    {
+                                        <img src="@sports.UrlToImage"
+                                             class="img-fluid rounded-start w-100 h-75"
+                                             alt="Sports News Image"
+                                             style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+                                    }
+                                </div>
+                                <div class="col-md-7 ms-2 mt-4">@sports.Title</div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (buisness != null)
+                    {
+                        <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                            <div class="row flex-grow-1">
+                                <div class="col-md-4 mt-4">
+                                    @if (!string.IsNullOrEmpty(buisness.UrlToImage))
+                                    {
+                                        <img src="@buisness.UrlToImage"
+                                             class="img-fluid rounded-start w-100 h-75"
+                                             alt="Business News Image"
+                                             style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+                                    }
+                                </div>
+                                <div class="col-md-7 ms-2 mt-4">@buisness.Title</div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (education != null)
+                    {
+                        <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                            <div class="row flex-grow-1">
+                                <div class="col-md-4 mt-4">
+                                    @if (!string.IsNullOrEmpty(education.UrlToImage))
+                                    {
+                                        <img src="@education.UrlToImage"
+                                             class="img-fluid rounded-start w-100 h-75"
+                                             alt="Business News Image"
+                                             style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+                                    }
+                                </div>
+                                <div class="col-md-7 ms-2 mt-4">@education.Title</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="page-border col-9 mt-lg-4" style="margin-left: 135px;"></div>
+    }
+
+}
+else
+{
+    <div class="container-fluid d-flex flex-column mb-2 mt-4" style="min-height: calc(100vh - 170px);">
+        <div class="flex-grow-1 d-flex mb-2">
+            <!-- Left column -->
+            <div class="col-md-7 d-flex frosted-glass" style="border-radius: 10px; overflow: hidden;">
+                <div class="p-3 flex-fill">
+                    <div class="col">
+                        
+                            <div class="col-md-12 mb-lg-3">
+                            <a class="text-decoration-none">No article to display</a>
+                            </div>
+                            <div class="col-md-12 mb-lg-3">
+                                <h5 class="card-title">
+                                    <p class="card-text text-muted">
+                                        <small>No article</small>
+                                    </p>
+                                </h5>
+                            </div>
+                            <div class="col-md-12 mt-lg-3">
+
+                            <img src=""
+                                 class="img-fluid rounded-start w-100"
+                                 alt="News Image"
+                                 style="max-height: 50vh; object-fit: cover; display: block; border-radius:8px;" />
+                                
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="col-md-4 ms-4 d-flex flex-column index-right justify-content-between">
+               
+                    <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                        <div class="row flex-grow-1">
+                            <div class="col-md-4 mt-4">
+                                
+                                    <img src=""
+                                         class="img-fluid rounded-start w-100 h-75"
+                                         alt="No Image"
+                                         style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+                                
+                            </div>
+                            <div class="col-md-7 ms-2 mt-4">No Title</div>
+                        </div>
+                    </div>
+                
+
+                
+                    <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                        <div class="row flex-grow-1">
+                            <div class="col-md-4 mt-4">
+                               
+                                    <img src=""
+                                         class="img-fluid rounded-start w-100 h-75"
+                                         alt="No Image"
+                                         style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+                               
+                            </div>
+                            <div class="col-md-7 ms-2 mt-4">No Title</div>
+                        </div>
+                    </div>
+                
+
+               
+                    <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                        <div class="row flex-grow-1">
+                            <div class="col-md-4 mt-4">
+                               
+                                    <img src=""
+                                         class="img-fluid rounded-start w-100 h-75"
+                                         alt="No Image"
+                                         style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+                               
+                            </div>
+                            <div class="col-md-7 ms-2 mt-4">No Title</div>
+                        </div>
+                    </div>
+
+
+                <div class="p-2 d-flex flex-column flex-grow-1 frosted-glass mb-2">
+                    <div class="row flex-grow-1">
+                        <div class="col-md-4 mt-4">
+
+                            <img src=""
+                                 class="img-fluid rounded-start w-100 h-75"
+                                 alt="No Image"
+                                 style="max-height: 300px; object-fit: cover; display: block; border-radius:8px" />
+
+                        </div>
+                        <div class="col-md-7 ms-2 mt-4">No Title</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-border col-9 mt-lg-4" style="margin-left: 135px;"></div>
+}
+

@@ -1,0 +1,89 @@
+﻿@model List<BugalDaily.Models.SubscriptionPlan>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<div class="container mt-5">
+    <h1 class="text-center text-danger mb-4">Choose Your Plan</h1>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var plan in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="frosted-glass">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">@plan.Name</h4>
+                            <p class="card-text">₹@plan.Price</p>
+                            <p class="card-text text-muted">@plan.DurationInDays days</p>
+
+                            <button class="pay-btn" data-planid="@plan.Id">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-center text-danger">No subscription plans available.</p>
+    }
+</div>
+<script>
+    document.querySelectorAll(".pay-btn").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            let planId = this.getAttribute("data-planid");
+
+            // 1️⃣ Call backend to create Razorpay order
+            fetch(`/Subscription/CreateOrder?planId=${planId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data || !data.orderId) {
+                    alert("❌ Failed to create order!");
+                    return;
+                }
+
+                // 2️⃣ Razorpay options
+                var options = {
+                    "key": "@ViewBag.RazorpayKey", // Pass from backend
+                    "amount": data.amount, // amount already in paise from backend
+                    "currency": "INR",
+                    "name": "BugalDaily",
+                    "description": "Subscription Payment",
+                    "order_id": data.orderId,
+                    "handler": function (response) {
+                        // 3️⃣ Confirm payment with backend
+                        fetch('/Subscription/ConfirmPayment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                PlanId: planId,
+                                RazorpayPaymentId: response.razorpay_payment_id,
+                                RazorpayOrderId: response.razorpay_order_id,
+                                RazorpaySignature: response.razorpay_signature
+                            })
+                        })
+                        .then(r => r.json())
+                        .then(r => {
+                            if (r.success) {
+                                alert("✅ Payment successful!");
+                                window.location.href = "/ThankYou";
+                            } else {
+                                alert("❌ Payment verification failed.");
+                            }
+                        });
+                    },
+                    "theme": { "color": "#3399cc" }
+                };
+
+                // 4️⃣ Open Razorpay popup
+                var rzp = new Razorpay(options);
+                rzp.open();
+            });
+        });
+    });
+</script>
+
+

@@ -1,0 +1,55 @@
+﻿@using System.Text
+@model List<BugalDaily.Models.TechArticleModel>
+
+@{
+    ViewData["Title"] = "Sports News";
+}
+
+<script>
+    const menuIcon = document.getElementById("menuIcon");
+    if (menuIcon) {
+        menuIcon.addEventListener("click", () => {
+            menuIcon.classList.toggle("open");
+        });
+    }
+</script>
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Sports News</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var article in Model)
+        {
+            var encodedUrl = Convert.ToBase64String(Encoding.UTF8.GetBytes(article.Url));
+
+            <div class="card mb-3 shadow-sm title-card-border">
+                <div class="row g-0">
+                    @if (!string.IsNullOrEmpty(article.UrlToImage))
+                    {
+                        <div class="col-md-4">
+                            <img src="@article.UrlToImage" class="img-fluid rounded-start" alt="News Image" style="object-fit: cover; height: 100%;">
+                        </div>
+                    }
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">@article.Title</h5>
+                            <p class="card-text text-muted">
+                                <small>@article.SourceName | @(article.PublishedAt?.ToString("g") ?? "Unknown")</small>
+                            </p>
+                            <p class="card-text">@article.Description</p>
+                            <a href="@Url.Action("AstrologyDetails", "Technology", new { encodedUrl = encodedUrl })" class="text-decoration-none">
+                                Read More
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No articles found. Please try again later.</p>
+    }
+</div>

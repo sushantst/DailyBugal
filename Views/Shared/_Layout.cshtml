@@ -1,0 +1,184 @@
+﻿<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var toggle = document.getElementById("navbarToggleMenu");
+        var leftCol = document.getElementById("leftNavCol");
+        var mainCol = document.getElementById("mainContentCol");
+        var menu = document.getElementById("sideNavMenu");
+
+        var menuVisible = false;
+
+        function setMenuState(visible) {
+            // 🔎 Fix: make sure required elements exist before touching classList
+            if (!leftCol || !mainCol || !menu) {
+                console.warn("One or more menu elements not found in the DOM.");
+                return; // prevent JS error
+            }
+
+            if (visible) {
+                leftCol.classList.remove("d-none");
+                leftCol.classList.add("col-md-2");
+                mainCol.classList.remove("col-md-10");
+                mainCol.classList.add("col-md-8");
+                menu.classList.remove("d-none");
+            } else {
+                leftCol.classList.add("d-none");
+                leftCol.classList.remove("col-md-2");
+                mainCol.classList.remove("col-md-8");
+                mainCol.classList.add("col-md-10");
+                menu.classList.add("d-none");
+            }
+        }
+
+        // 🔎 Fix: only call setMenuState if elements exist
+        if (leftCol && mainCol && menu) {
+            setMenuState(menuVisible);
+        }
+
+        if (toggle && leftCol && mainCol && menu) {
+            toggle.addEventListener("click", function () {
+                menuVisible = !menuVisible;
+                setMenuState(menuVisible);
+            });
+        }
+    });
+</script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BugalDaily</title>
+    <link rel="icon" type="image/x-icon" href="~/img/logo.jpg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BugalDaily.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+
+    <div class="container-fluid h-100 p-0" style="min-height: 100vh;">
+        <div class="row h-100 m-0" style="min-height: 100vh; width: 100vw;">
+          
+            <!-- Main Content -->
+            <div id="mainContentCol" class="col-12 col-md-12 order-1 order-md-2 p-0 right-content">
+                @if (!((ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/Account/Login") ?? false) ||
+                                (ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/Account/Register") ?? false)))
+                {
+                    <header>
+                        <nav class="navbar navbar-expand-sm navbar-light frosted-glass main-header-border" style="border-radius:0px;">
+                            <div class="container-fluid d-flex justify-content-between align-items-center">
+
+                                <!-- Left: SVG Menu Icon -->
+                                <a href="javascript:void(0);" id="navbarToggleMenu"
+                                   class="navbar-brand header-text d-flex align-items-center"
+                                   style="cursor:pointer; text-decoration:none;"
+                                   data-bs-toggle="modal" data-bs-target="#leftNavModal">
+                                    <span id="mainMenuIcon" class="me-2" style="display:inline;">
+                                        <svg width="50" height="30" viewBox="0 0 80 48" fill="currentColor">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M66.8517 32.0842C68.5359 29.8276 69.5329 27.0282 69.5329 23.996C69.5329 16.5202 63.4727 10.46 55.9969 10.46C48.5212 10.46 42.4609 16.5202 42.4609 23.996C42.4609 31.4717 48.5212 37.532 55.9969 37.532C58.9975 37.532 61.77 36.5557 64.0141 34.9034L69.0904 39.9796L71.9188 37.1512L66.8517 32.0842ZM63.1568 30.3569C64.6606 28.6654 65.5741 26.4374 65.5741 23.996C65.5741 18.7066 61.2863 14.4188 55.9969 14.4188C50.7076 14.4188 46.4197 18.7066 46.4197 23.996C46.4197 29.2853 50.7076 33.5732 55.9969 33.5732C58.4383 33.5732 60.6664 32.6597 62.3579 31.1558L63.1568 30.3569Z" fill="currentColor"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M35.7184 33.6973H10.0254V37.6973H38.0738C37.1617 36.4525 36.3708 35.1133 35.7184 33.6973Z" fill="currentColor"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M33.6848 21.998H10.0273V25.998H33.6845C33.6283 25.3394 33.5996 24.673 33.5996 23.9998C33.5996 23.3254 33.6284 22.6578 33.6848 21.998Z" fill="currentColor"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M38.0747 10.2998H10.0273V14.2998H35.7186C36.3712 12.8837 37.1624 11.5446 38.0747 10.2998Z" fill="currentColor"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+
+                                <!-- Center: Welcome text (with original styling) -->
+                                <div class="position-absolute start-50 translate-middle-x">
+                                    <a href="/Home" class="navbar-brand header-text d-block">BugalDaily!</a>
+                                </div>
+
+                                <!-- Right: Collapse toggle button (optional) -->
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <button class="nav-item dropdown ms-auto" style="border: none; background: none;">
+                                    @if (User.Identity?.IsAuthenticated ?? false)
+                                    {
+                                        <span class="me-2">@User.Identity.Name</span>
+                                    }
+                                    <a href="#" id="profileIcon" data-bs-toggle="modal" data-bs-target="#authModal">
+                                        <img src="../img/profile.png" alt="Profile" style="width:30px;height:30px;cursor:pointer;
+                                       border: 1px solid #1276d4; border-radius: 100px;">
+                                    </a>
+                                </button>
+                            </div>
+                        </nav>
+
+                    </header>
+                }
+
+                <main role="main" class="p-4">
+                    @RenderBody()
+                </main>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Left Navigation Modal -->
+    <div class="modal fade custom-modal-position" id="leftNavModal" tabindex="-1" aria-labelledby="leftNavModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-sm" style="max-width: 250px;">
+            <div class="modal-content" style="height: 100%; background-color:#f7f7f8;">
+          <div class="modal-header pb-0 border-bottom-0">
+                    <h5 class="modal-title  mt-1" id="leftNavModalLabel" style="width:100%; font-weight: 700;">
+              BugalDaily!
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body pt-0">
+                    <ul class="nav flex-column mt-4 text-dark-custom">
+              <li class="nav-item mb-2">
+  <a class="nav-link" asp-controller="Articles" asp-action="NewArticles">E-paper</a>
+</li>
+              <li class="nav-item mb-2">
+                <a class="nav-link" asp-controller="Home" asp-action="About">Subscription</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link" asp-controller="Home" asp-action="Contact">Help us</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link" asp-controller="Home" asp-action="Contact">Ad Booking</a>
+              </li>
+              <li class="nav-item mb-2">
+                <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog m-5" id="authModalDialog">
+        <div class="modal-content frosted-glass">
+            <div class="d-flex flex-column gap-3">
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a>
+                    <form method="post"
+                          asp-area="Identity"
+                          asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Page("/Account/Login", new { area = "Identity" })"
+                          class="w-100 mb-0">
+                        <button type="submit" class="btn btn-danger w-100">Logout</button>
+                    </form>
+                }
+                else
+                {
+                    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    <a class="btn btn-secondary" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

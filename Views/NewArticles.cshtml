@@ -1,0 +1,75 @@
+﻿@model List<BugalDaily.Models.ReportedArticle>
+@using System.Text
+@inject BugalDaily.Service.SubscriptionService SubscriptionService
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Latest Articles</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var article in Model)
+        {
+            <div class="mb-3">
+                <div class="row g-0">
+                    @if (!string.IsNullOrEmpty(article.ImagePath))
+                    {
+                        <div class="col-md-4">
+                            <img src="@article.ImagePath"
+                                 class="img-fluid rounded-start"
+                                 alt="Article Image"
+                                 style="object-fit: cover; height: 100%; width:100%;">
+                        </div>
+                    }
+                    <div class="col-md-12">
+                        <div class="">
+                            <div class="row ms-2">
+                                <div>
+                                    <h3 class="card-title">@article.Title</h3>
+                                </div>
+                                <div>
+                                    <p class="card-text text-muted text-danger mb-1">
+                                        <small style="color:blue;">@article.Author | @article.Location, @article.Country</small>
+                                    </p>
+                                </div>
+                                <div><p class="card-text"><small>@article.CreatedAt.ToString("g")</small></p></div>
+                                
+                            </div>
+                            <div class="frosted-glass mt-3">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (SubscriptionService.HasActiveSubscription(UserManager.GetUserId(User)))
+                                    {
+                                        <!-- ✅ Show full content -->
+                                        <p class="card-text">@article.Article</p>
+                                    }
+                                    else
+                                    {
+                                        <!-- 🚫 Blurred content + subscribe button -->
+                                        <div class="blurred-text" data-blur="1">
+                                            <p class="card-text">@article.Article</p>
+                                        </div>
+                                        <a asp-controller="Subscription" asp-action="Plans" class="btn btn-sm btn-outline-success">Subscribe to Read</a>
+                                    }
+                                }
+                                else
+                                {
+                                    <!-- Guest user -->
+                                    <div class="blurred-text">
+                                        <p class="card-text">@article.Article</p>
+                                    </div>
+                                    <a href="/Identity/Account/Login" class="btn btn-sm btn-outline-primary">Login to Subscribe</a>
+                                }
+                            </div>
+
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center text-muted">No articles found.</p>
+    }
+</div>

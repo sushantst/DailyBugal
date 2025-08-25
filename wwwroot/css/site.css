@@ -1,0 +1,270 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: darkkhaki !important;
+    color: #1A1A1A !important;
+    forced-color-adjust: none;
+    /*background-image: url("../img/pr.jpg") !important;*/
+    background-size: cover;
+    background-position: center;
+}
+.modal-header {
+    background-color: darkkhaki !important;
+    transition: color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+    .modal-header:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    }
+.modal-body {
+    background-color: darkkhaki !important;
+}
+.header-text {
+    
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+.right-content {
+    
+    font-weight: 600;
+    font-size: 1.25rem;
+    padding: 1rem;
+    
+    border-left: 2px solid #ddd;
+    height: 100vh;
+}
+
+.main-header-border{
+    border-bottom:1px solid #1A1A1A;
+}
+.page-border {
+    border-bottom: 2px solid #1A1A1A;
+}
+.custom-modal-position .modal-dialog {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 20%; 
+    height: 100%;
+    transform: none !important;
+    background-color:#F7F7F8;
+}
+.text-dark-custom .nav-link {
+    color: #1A1A1A !important;
+    font-weight: 600;
+    font-size: 18px;
+    border-bottom: 1px solid #1A1A1A;
+    line-height: 35px;
+    transition: color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+    .text-dark-custom .nav-link:hover {
+        color: #007bff !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    }
+.custom-primary-btn {
+    min-width: 117px;
+    height: 42px;
+    gap: 4px;
+    padding: 6px 18px;
+    border-radius: 100px;
+    border: 1px solid #1A5994;
+    background-color: #dde3e3;
+    color: #1A1A1A !important;
+    white-space: nowrap;
+    transition: color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+    .custom-primary-btn:hover {
+        
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    }
+
+/* Secondary Button */
+.custom-sec-btn {
+    min-width: 117px;
+    height: 42px;
+    gap: 4px;
+    padding: 6px 18px;
+    border-radius: 100px;
+    border: 1px solid #1A5994;
+    background-color: #007bff;
+    color: #fff !important;
+    transition: color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+    .custom-sec-btn:hover {
+        
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    }
+
+.btn-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+.border-index {
+    border: 3px solid #1A1A1A;
+    transition: color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+    .border-index:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+    }
+
+
+.title-card-border {
+    border: 2px solid red;
+    border-radius: 6px;
+    transition: color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+    .title-card-border:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1.5) !important;
+    }
+
+
+.frosted-glass {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+    .frosted-glass:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1.5) !important;
+    }
+
+.right-stack {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background-color: #d6dfe8;
+    border-radius: 10px
+}
+    .right-stack:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1.5) !important;
+    }
+
+.frosted-glass-btn {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    color: #1A1A1A !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    min-width: 117px;
+    height: 42px;
+    gap: 4px;
+    padding: 6px 18px;
+    border-radius: 100px;
+    text-decoration: none;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .frosted-glass-btn:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 1.5) !important;
+    }
+
+.comment-button {
+    position: fixed;
+    bottom: 20px; /* Distance from bottom */
+    left: 20px; /* Distance from left */
+    z-index: 9999; /* Stay on top of other content */
+    background-color: #007bff; /* Bootstrap blue */
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+    .comment-button:hover {
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 1.5) !important;
+    }
+
+.modal-review-header {
+    background-color: #e9e6e6 !important;
+}
+.modal-review-body {
+    background-color: white !important;
+}
+.modal-review-footer {
+    background-color: white !important;
+}
+.message-item {
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+    border-radius: 8px 8px 8px 8px;
+}
+
+.message-sender {
+    font-weight: bold;
+    color: #007bff; 
+    margin-right: 8px;
+}
+
+.message-timestamp {
+    color: #888;
+    font-size: 0.6em;
+}
+
+.message-text {
+    margin-top: 4px;
+    color: #333;
+    font-size: 0.7em;
+    
+}
+
+#authModalDialog {
+    position: absolute;
+    top: 50px; /* distance below profile icon */
+    right: 0; /* align right edge with icon */
+    margin: 0;
+}
+
+.blurred-text {
+    filter: blur(5px);
+    max-height: 150px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .blurred-text::after {
+        content: "Subscribe to read full article";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        text-align: center;
+        padding: 5px;
+        font-weight: bold;
+    }
+
+div[data-blur] {
+    filter: blur(5px) !important;
+    pointer-events: none !important;
+}
