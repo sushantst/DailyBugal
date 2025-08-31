@@ -9,6 +9,8 @@ It has an integrated Razorpay for now, which supports UPI and card transactions.
 <img width="775" height="424" alt="image" src="https://github.com/user-attachments/assets/d8bddcab-2e86-45e3-a4c7-ba31fd966e40" />
 <img width="775" height="424" alt="image" src="https://github.com/user-attachments/assets/d1c3bec3-bd34-4f81-a566-38d9b2af444d" />
 <img width="775" height="424" alt="image" src="https://github.com/user-attachments/assets/84700a1b-1175-4a65-a9de-9fe6c9f336ef" />
+<img width="775" height="424" alt="image" src="https://github.com/user-attachments/assets/41d50e81-22a7-4a8a-b3eb-0c933deaace0" />
+
 
 
 
