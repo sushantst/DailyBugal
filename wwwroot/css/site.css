@@ -268,3 +268,7 @@ div[data-blur] {
     filter: blur(5px) !important;
     pointer-events: none !important;
 }
+
+.btn-outline-info{
+    font-weight:600;
+}

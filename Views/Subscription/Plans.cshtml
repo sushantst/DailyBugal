@@ -9,13 +9,13 @@
             @foreach (var plan in Model)
             {
                 <div class="col-md-4 mb-3">
-                    <div class="frosted-glass">
+                    <div class="frosted-glass" style="border: 1px solid red;">
                         <div class="card-body text-center">
                             <h4 class="card-title">@plan.Name</h4>
                             <p class="card-text">₹@plan.Price</p>
                             <p class="card-text text-muted">@plan.DurationInDays days</p>
 
-                            <button class="pay-btn" data-planid="@plan.Id">Subscribe</button>
+                            <button class="btn btn-outline-info" data-planid="@plan.Id">Subscribe</button>
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
 
             let planId = this.getAttribute("data-planid");
 
-            // 1️⃣ Call backend to create Razorpay order
+            
             fetch(`/Subscription/CreateOrder?planId=${planId}`, {
                 method: 'POST'
             })
@@ -45,16 +45,16 @@
                     return;
                 }
 
-                // 2️⃣ Razorpay options
+                
                 var options = {
-                    "key": "@ViewBag.RazorpayKey", // Pass from backend
-                    "amount": data.amount, // amount already in paise from backend
+                    "key": "@ViewBag.RazorpayKey", 
+                    "amount": data.amount, 
                     "currency": "INR",
                     "name": "BugalDaily",
                     "description": "Subscription Payment",
                     "order_id": data.orderId,
                     "handler": function (response) {
-                        // 3️⃣ Confirm payment with backend
+                        
                         fetch('/Subscription/ConfirmPayment', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -78,7 +78,6 @@
                     "theme": { "color": "#3399cc" }
                 };
 
-                // 4️⃣ Open Razorpay popup
                 var rzp = new Razorpay(options);
                 rzp.open();
             });

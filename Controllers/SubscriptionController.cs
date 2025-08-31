@@ -85,7 +85,7 @@ namespace BugalDaily.Controllers
                 PlanId = plan.Id,
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now.AddDays(plan.DurationInDays),
-                PaymentId = dto.RazorpayPaymentId,  // ✅ Now not null
+                PaymentId = dto.RazorpayPaymentId,  
                 IsActive = true
             };
 
@@ -117,7 +117,8 @@ namespace BugalDaily.Controllers
         }
     }
 
-    // ✅ DTO class
+   
+
     public class PaymentConfirmationDto
     {
         public string RazorpayPaymentId { get; set; }
