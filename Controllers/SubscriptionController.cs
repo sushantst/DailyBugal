@@ -34,15 +34,18 @@ namespace BugalDaily.Controllers
 
             var keyId = _config["Razorpay:KeyId"];
             var keySecret = _config["Razorpay:KeySecret"];
-
+            if (string.IsNullOrEmpty(keyId) || string.IsNullOrEmpty(keySecret))
+            {
+                throw new Exception("Razorpay keys are missing from configuration.");
+            }
             var client = new RazorpayClient(keyId, keySecret);
 
             var options = new Dictionary<string, object>
             {
-                { "amount", plan.Price * 100 }, // amount in paise
+                { "amount", plan.Price * 100 }, 
                 { "currency", "INR" },
                 { "receipt", Guid.NewGuid().ToString() },
-                { "payment_capture", 0 }, // auto capture
+                { "payment_capture", 0 }, 
                 { "notes", new Dictionary<string, string>
                     {
                         { "UserId", _userManager.GetUserId(User) },
@@ -62,13 +65,12 @@ namespace BugalDaily.Controllers
             });
         }
 
-        // ✅ Confirm payment from frontend
+        
         [HttpPost]
         public IActionResult ConfirmPayment([FromBody] PaymentConfirmationDto dto)
         {
             var keySecret = _config["Razorpay:KeySecret"];
 
-            // 🔐 Verify signature
             string generatedSignature = GenerateSignature(dto.RazorpayOrderId + "|" + dto.RazorpayPaymentId, keySecret);
 
             if (generatedSignature != dto.RazorpaySignature)
@@ -95,7 +97,6 @@ namespace BugalDaily.Controllers
             return Ok(new { success = true });
         }
 
-        // ✅ Load plans and pass Razorpay key to view
         public IActionResult Plans()
         {
             var plans = _context.SubscriptionPlans.ToList();
@@ -103,7 +104,6 @@ namespace BugalDaily.Controllers
             return View(plans);
         }
 
-        // 🔐 Helper to verify signature
         private string GenerateSignature(string data, string key)
         {
             var keyBytes = Encoding.UTF8.GetBytes(key);
@@ -116,8 +116,6 @@ namespace BugalDaily.Controllers
             }
         }
     }
-
-   
 
     public class PaymentConfirmationDto
     {

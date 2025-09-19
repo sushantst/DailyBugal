@@ -3,12 +3,24 @@ using BugalDaily.Service;
 using BugalDaily.Views.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddUserSecrets<Program>() 
+    .AddEnvironmentVariables();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
@@ -17,7 +29,9 @@ builder.Services.AddScoped<SubscriptionService>();
 builder.Services.Configure<RazorpaySettings>(
     builder.Configuration.GetSection("Razorpay"));
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<BlobStorageService>();
 builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
 var app = builder.Build();
